@@ -7,7 +7,7 @@ namespace SampleWeb.MiscAuth
     {
         public static void AddIdentityAuth(this IServiceCollection services)
         {
-            services.AddAuthentication("cookie")
+            services.AddAuthentication("cookie")                
                     .AddCookie("cookie");
         }
 
