@@ -1,6 +1,6 @@
 ﻿namespace SampleWeb.MiscApi.Services
 {
-    public interface IWeatherForecastPrivider
+    public interface IWeatherForecastProvider
     {
         string GetWeatherForecast();
     }

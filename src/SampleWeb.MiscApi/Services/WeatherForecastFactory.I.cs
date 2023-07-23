@@ -2,6 +2,6 @@
 {
     public interface IWeatherForecastFactory
     {
-        IWeatherForecastPrivider CreateWeatherForecast(string providerName);
+        IWeatherForecastProvider CreateWeatherForecast(string providerName);
     }
 }

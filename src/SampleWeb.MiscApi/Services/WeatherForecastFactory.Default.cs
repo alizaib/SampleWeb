@@ -12,10 +12,10 @@ namespace SampleWeb.MiscApi.Services
             _sp = sp;
             _types = options.Value.Types;
         }
-        public IWeatherForecastPrivider CreateWeatherForecast(string providerName) { 
+        public IWeatherForecastProvider CreateWeatherForecast(string providerName) { 
             if(_types.TryGetValue(providerName, out var type))
             {
-                return (IWeatherForecastPrivider)_sp.GetRequiredService(type);
+                return (IWeatherForecastProvider)_sp.GetRequiredService(type);
             }
             throw new ArgumentOutOfRangeException(providerName);
         }
