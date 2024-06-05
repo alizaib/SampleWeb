@@ -6,20 +6,18 @@ namespace SampleWeb.MiscApi.Controllers
     [ApiController]
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
-    {
-        private readonly IWeatherForecastFactory _factory;
-        private readonly ILogger<WeatherForecastController> _logger;
+    {   
+        private readonly IServiceProvider _serviceProvider;
 
-        public WeatherForecastController(IWeatherForecastFactory factory, ILogger<WeatherForecastController> logger)
-        {
-            _factory = factory;
-            _logger = logger;
+        public WeatherForecastController(IServiceProvider serviceProvider)
+        {   
+            _serviceProvider = serviceProvider;
         }
 
         [HttpGet(Name = "GetWeatherForecast")]
         public string Get([FromQuery]string providerName)
         {
-            var provider = _factory.CreateWeatherForecast(providerName);
+            var provider = _serviceProvider.GetRequiredKeyedService<IWeatherForecastProvider>(providerName);
             return provider.GetWeatherForecast();
         }
     }

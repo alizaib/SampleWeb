@@ -11,10 +11,8 @@ services.AddControllers();
 services.AddEndpointsApiExplorer();
 services.AddSwaggerGen();
 
-services.TryAddTransient<IWeatherForecastFactory, DefaultWeatherForecastFactory>();
-
-services.RegisterWeatherProvider<WeatherForecastProviderOne>("one");
-services.RegisterWeatherProvider<WeatherForecastProviderTwo>("two");    
+services.AddKeyedScoped<IWeatherForecastProvider, WeatherForecastProviderOne>("one");
+services.AddKeyedScoped<IWeatherForecastProvider, WeatherForecastProviderTwo>("two");
 
 var app = builder.Build();
 
