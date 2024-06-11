@@ -14,11 +14,17 @@ namespace SampleWeb.MiscApi.Controllers
             _serviceProvider = serviceProvider;
         }
 
-        [HttpGet(Name = "GetWeatherForecast")]
-        public string Get([FromQuery]string providerName)
+        [HttpGet]
+        public string GetWeatherForecast([FromQuery]string providerName)
         {
             var provider = _serviceProvider.GetRequiredKeyedService<IWeatherForecastProvider>(providerName);
             return provider.GetWeatherForecast();
+        }
+
+        [HttpGet("IsLive")]
+        public ActionResult IsLive()
+        {
+            return Ok("WeatherForecast is live");
         }
     }
 }

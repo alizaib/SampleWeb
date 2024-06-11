@@ -1,5 +1,3 @@
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using SampleWeb.MiscApi;
 using SampleWeb.MiscApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
