@@ -3,22 +3,23 @@
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 USER app
 WORKDIR /app
-EXPOSE 80
+EXPOSE 8080
+EXPOSE 8081
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["EntryPoint/EntryPoint.csproj", "EntryPoint/"]
-RUN dotnet restore "./EntryPoint/EntryPoint.csproj"
+COPY ["Service3/Service3.csproj", "Service3/"]
+RUN dotnet restore "./Service3/Service3.csproj"
 COPY . .
-WORKDIR "/src/EntryPoint"
-RUN dotnet build "./EntryPoint.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR "/src/Service3"
+RUN dotnet build "./Service3.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./EntryPoint.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./Service3.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "EntryPoint.dll"]
+ENTRYPOINT ["dotnet", "Service3.dll"]

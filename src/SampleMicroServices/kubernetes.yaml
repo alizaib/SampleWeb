@@ -1,0 +1,104 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: entrypoint-deployment
+spec:
+  selector:
+    matchLabels:
+      app: entrypoint-pod
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: entrypoint-pod
+    spec:
+      containers:
+        - name: entrypoint-container
+          image: entrypoint:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+              protocol: TCP
+          env:
+            - name: ASPNETCORE_URLS
+              value: http://+:80
+--- 
+apiVersion: v1
+kind: Service
+metadata:
+    name: entrypoint-service
+spec:
+    ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 80
+    selector:
+        app: entrypoint-pod
+    type: ClusterIP
+---              
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service2-deployment
+spec:
+  selector:
+    matchLabels:
+      app: service2-pod
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: service2-pod
+    spec:
+      containers:
+        - name: service2-container
+          image: service2:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+              protocol: TCP
+          env:
+            - name: ASPNETCORE_URLS
+              value: http://+:80            
+--- 
+apiVersion: v1
+kind: Service
+metadata:
+    name: service2-service
+spec:
+    ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 80
+    selector:
+        app: service2-pod
+    type: ClusterIP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: service2-ingress
+  annotations:
+    #nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+        paths:
+          - path: /service2(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: service2-service
+                port:
+                  number: 80
+          - path: /entrypoint(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: entrypoint-service
+                port:
+                  number: 80
+---  

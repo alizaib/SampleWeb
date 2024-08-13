@@ -8,17 +8,17 @@ EXPOSE 80
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["EntryPoint/EntryPoint.csproj", "EntryPoint/"]
-RUN dotnet restore "./EntryPoint/EntryPoint.csproj"
+COPY ["Service2/Service2.csproj", "Service2/"]
+RUN dotnet restore "./Service2/Service2.csproj"
 COPY . .
-WORKDIR "/src/EntryPoint"
-RUN dotnet build "./EntryPoint.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR "/src/Service2"
+RUN dotnet build "./Service2.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./EntryPoint.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./Service2.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "EntryPoint.dll"]
+ENTRYPOINT ["dotnet", "Service2.dll"]

@@ -6,12 +6,10 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddCors();
 
 var app = builder.Build();
+//app.MapGet("/hello", () => "Hello World! from service2");
 
-app.UseCors(b => b.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
-//app.MapGet("/hello", () => "Hello World! from entry point");
 // Configure the HTTP request pipeline.
 //if (app.Environment.IsDevelopment())
 //{
